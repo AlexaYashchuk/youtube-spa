@@ -2,7 +2,7 @@ import { useForm, Controller } from "react-hook-form";
 import { Input, Button } from "antd";
 import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { useState } from "react";
 
 import { loginUser } from "../features/login/loginSlice";
@@ -36,14 +36,14 @@ const Login = () => {
     formState: { errors },
   } = useForm<LoginFormInputs>({ resolver: yupResolver(schema) });
 
-  //   const navigate = useNavigate();
+  const navigate = useNavigate();
   const dispatch = useAppDispatch();
   const isLoading = useAppSelector((state) => state.login.isLoading);
 
   const loginAxios = async (data: LoginFormInputs) => {
     try {
       await dispatch(loginUser(data)).unwrap();
-      //   navigate("/todo-list/addTodo");
+      navigate("/search");
     } catch (error) {
       console.error("Login failed:", error);
     }
@@ -86,15 +86,15 @@ const Login = () => {
             className="registration_form_el"
             loading={isLoading}
           >
-            Log In
+            Вход
           </Button>
         </form>
       </div>
 
-      <p>Don't have an account?</p>
-      {/* <Link to="/todo-list/"> */}
-      <Button type="primary">Sign Up</Button>
-      {/* </Link> */}
+      {/* <p>Don't have an account?</p>
+      <Link to="/search">
+        <Button type="primary">Вход</Button>
+      </Link> */}
 
       {/* {isLoading && <Loader />} */}
     </>

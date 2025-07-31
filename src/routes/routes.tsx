@@ -1,12 +1,13 @@
 import { Routes, Route } from "react-router-dom";
 import { Home } from "../pages/Home";
 import { SearchVideoPage } from "../pages/SearchVideo";
+import App from "../App";
 
 const AppRoutes = () => {
   return (
     <Routes>
-      <Route path="youtube-spa/login" element={<Home />} />
-      <Route path="youtube-spa/search" element={<SearchVideoPage />} />
+      <Route path="/login" element={<App />} />
+      <Route path="/search" element={<SearchVideoPage />} />
     </Routes>
   );
 };
