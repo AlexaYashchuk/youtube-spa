@@ -64,7 +64,7 @@ const loginSlice = createSlice({
           action.payload?.message ??
           action.error.message ??
           "Ошибка авторизации";
-        //alert(state.error);
+        alert(state.error);
       });
   },
 });

@@ -3,8 +3,7 @@ import { Input, Button } from "antd";
 import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { Link, useNavigate } from "react-router-dom";
-import { useEffect, useState } from "react";
-import { notification } from "antd";
+import { useState } from "react";
 
 import { loginUser } from "../features/login/loginSlice";
 import { useAppDispatch, useAppSelector } from "../app/hooks";
@@ -40,35 +39,19 @@ const Login = () => {
   //   const navigate = useNavigate();
   const dispatch = useAppDispatch();
   const isLoading = useAppSelector((state) => state.login.isLoading);
-  const errorMessage = useAppSelector((state) => state.login.error);
 
   const loginAxios = async (data: LoginFormInputs) => {
     try {
       await dispatch(loginUser(data)).unwrap();
-      // navigate("/todo-list/addTodo");
-    } catch (error: any) {
+      //   navigate("/todo-list/addTodo");
+    } catch (error) {
       console.error("Login failed:", error);
-      console.log("Try to show notification");
-      notification.error({
-        message: "Ошибка входа",
-        description: error?.message || "Неверный логин или пароль",
-        placement: "topRight",
-        duration: 3,
-      });
     }
   };
 
-  useEffect(() => {
-    notification.error({
-      message: "Test Notification",
-      description: "Это тестовое уведомление",
-      placement: "topRight",
-    });
-  }, []);
-
   return (
     <>
-      <div className="mainDiv">
+      <div>
         <form onSubmit={handleSubmit(loginAxios)}>
           <div className="registration_form_el_block">
             <label className="registration_form_el">Email</label>
