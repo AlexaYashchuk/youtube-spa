@@ -6,7 +6,8 @@ import App from "../App";
 const AppRoutes = () => {
   return (
     <Routes>
-      <Route path="/login" element={<App />} />
+      <Route path="/" element={<App />} />
+      {/* <Route path="/login" element={<Home />} /> */}
       <Route path="/search" element={<SearchVideoPage />} />
     </Routes>
   );
