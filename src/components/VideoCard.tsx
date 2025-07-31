@@ -1,8 +1,10 @@
 //import type { VideoItem } from '../types/video';
 import type { VideoItem } from "../types/video";
 
-export const VideoCard = ({ video }: { video: VideoItem }) => {
+const VideoCard = ({ video }: { video: VideoItem }) => {
   const { title, description, thumbnails } = video.snippet;
+
+  const value: number = 5;
 
   return (
     <div>
@@ -15,3 +17,5 @@ export const VideoCard = ({ video }: { video: VideoItem }) => {
     </div>
   );
 };
+
+export { VideoCard };

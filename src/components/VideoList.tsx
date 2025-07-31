@@ -1,7 +1,7 @@
 import { useAppSelector } from "../app/hooks";
 import { VideoCard } from "./VideoCard";
 
-export const VideoList = () => {
+const VideoList = () => {
   const videos = useAppSelector((state) => state.search.videos);
 
   return (
@@ -12,3 +12,5 @@ export const VideoList = () => {
     </div>
   );
 };
+
+export { VideoList };

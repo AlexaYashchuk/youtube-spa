@@ -1,5 +1,6 @@
 import { SearchBar } from "./features/search/SearchBar";
 import { VideoList } from "./components/VideoList";
+import { Login } from "./components/login";
 import { useAppSelector, useAppDispatch } from "./app/hooks";
 import { searchVideos, clearHistory } from "./features/search/searchSlice";
 
@@ -9,7 +10,8 @@ function App() {
 
   return (
     <div style={{ padding: "20px", fontFamily: "Arial" }}>
-      <h1>🔍 YouTube Поиск Видео</h1>
+      <Login />
+      {/* <h1>🔍 YouTube Поиск Видео</h1>
       <SearchBar />
       <div>
         <h3>История запросов:</h3>
@@ -32,7 +34,7 @@ function App() {
         )}
       </div>
       <hr />
-      <VideoList />
+      <VideoList /> */}
     </div>
   );
 }
