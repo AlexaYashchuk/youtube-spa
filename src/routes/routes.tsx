@@ -1,4 +1,4 @@
-import { Routes, Route } from "react-router-dom";
+import { Routes, Route, Navigate } from "react-router-dom";
 import { Home } from "../pages/Home";
 import { SearchVideoPage } from "../pages/SearchVideo";
 import App from "../App";
@@ -6,8 +6,8 @@ import App from "../App";
 const AppRoutes = () => {
   return (
     <Routes>
-      <Route path="/" element={<App />} />
-      {/* <Route path="/login" element={<Home />} /> */}
+      <Route path="/" element={<Navigate to="/login" />} />
+      <Route path="/login" element={<Home />} />
       <Route path="/search" element={<SearchVideoPage />} />
     </Routes>
   );
