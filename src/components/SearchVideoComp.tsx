@@ -9,9 +9,9 @@ const SearchVideoComp = () => {
 
   return (
     <div>
-      <h1>🔍 YouTube Поиск Видео</h1>
+      <h1>🔍 Поиск видео</h1>
       <SearchBar />
-      <div>
+      {/* <div>
         <h3>История запросов:</h3>
         {history.length === 0 && <p>Нет запросов</p>}
         <ul>
@@ -30,9 +30,9 @@ const SearchVideoComp = () => {
             Очистить историю
           </button>
         )}
-      </div>
-      <hr />
-      <VideoList />
+      </div> */}
+      {/* <hr />
+      <VideoList /> */}
     </div>
   );
 };

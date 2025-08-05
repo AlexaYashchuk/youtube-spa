@@ -50,7 +50,7 @@ const searchSlice = createSlice({
       })
       .addCase(searchVideos.rejected, (state, action) => {
         state.loading = false;
-        state.error = action.error.message || "Error occurred";
+        state.error = action.error.message || "Error";
       });
   },
 });

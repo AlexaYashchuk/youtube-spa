@@ -3,11 +3,9 @@ import { Input, Button } from "antd";
 import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { useNavigate } from "react-router-dom";
-import { useState } from "react";
-
 import { loginUser } from "../features/login/loginSlice";
 import { useAppDispatch, useAppSelector } from "../app/hooks";
-// import { Loader } from "../loader/Loader";
+import "../pages/Home/Home.css";
 
 interface LoginFormInputs {
   email: string;
@@ -50,54 +48,37 @@ const Login = () => {
   };
 
   return (
-    <>
-      <div>
-        <form onSubmit={handleSubmit(loginAxios)}>
-          <div className="registration_form_el_block">
-            <label className="registration_form_el">Email</label>
-            <Controller
-              name="email"
-              control={control}
-              render={({ field }) => (
-                <Input
-                  {...field}
-                  type="email"
-                  className="registration_form_el"
-                />
-              )}
-            />
-            {errors.email && <p>{errors.email.message}</p>}
-          </div>
+    <div>
+      <form className="card" onSubmit={handleSubmit(loginAxios)}>
+        <img src="/video_player.svg" alt="logo" className={"logo"} />
 
-          <div className="registration_form_el_block">
-            <label className="registration_form_el">Password</label>
-            <Controller
-              name="password"
-              control={control}
-              render={({ field }) => (
-                <Input.Password {...field} className="registration_form_el" />
-              )}
-            />
-            {errors.password && <p>{errors.password.message}</p>}
-          </div>
+        <div className="input">
+          <Controller
+            name="email"
+            control={control}
+            render={({ field }) => (
+              <Input {...field} type="email" placeholder="Введите email" />
+            )}
+          />
+          {errors.email && <p>{errors.email.message}</p>}
+        </div>
 
-          <Button
-            htmlType="submit"
-            className="registration_form_el"
-            loading={isLoading}
-          >
-            Вход
-          </Button>
-        </form>
-      </div>
+        <div className="input">
+          <Controller
+            name="password"
+            control={control}
+            render={({ field }) => (
+              <Input.Password {...field} placeholder="Введите пароль" />
+            )}
+          />
+          {errors.password && <p>{errors.password.message}</p>}
+        </div>
 
-      {/* <p>Don't have an account?</p>
-      <Link to="/search">
-        <Button type="primary">Вход</Button>
-      </Link> */}
-
-      {/* {isLoading && <Loader />} */}
-    </>
+        <Button htmlType="submit" className="button" loading={isLoading}>
+          Вход
+        </Button>
+      </form>
+    </div>
   );
 };
 

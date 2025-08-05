@@ -1,14 +1,15 @@
 import { Routes, Route, Navigate } from "react-router-dom";
-import { Home } from "../pages/Home";
-import { SearchVideoPage } from "../pages/SearchVideo";
-import App from "../App";
+import { Home } from "../pages/Home/Home";
+import { SearchVideo } from "../pages/SearchVideo/SearchVideo";
+import { VideoPage } from "../pages/VideoPage/VideoPage";
 
 const AppRoutes = () => {
   return (
     <Routes>
       <Route path="/" element={<Navigate to="/login" />} />
       <Route path="/login" element={<Home />} />
-      <Route path="/search" element={<SearchVideoPage />} />
+      <Route path="/search" element={<SearchVideo />} />
+      <Route path="/videolist" element={<VideoPage />} />
     </Routes>
   );
 };
