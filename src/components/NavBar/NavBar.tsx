@@ -1,6 +1,6 @@
 import { Button } from "antd";
 import { LogoutOutlined } from "@ant-design/icons";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 import "./NavBar.css";
 
 const NavBar = () => {
@@ -15,7 +15,14 @@ const NavBar = () => {
     <div className="nav-panel">
       <div className="nav-panel-el ">
         <img src="/video_player.svg" alt="logo" width="30" />
-        {/* Video Search */}
+      </div>
+      <div className="menu">
+        <Link to="/search" className="menuBtn">
+          Поиск
+        </Link>
+        <Link to="/favorites" className="menuBtn">
+          Избранное
+        </Link>
       </div>
       <Button
         type="primary"

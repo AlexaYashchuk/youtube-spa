@@ -5,16 +5,23 @@ import TextField from "@mui/material/TextField";
 import { Button } from "@mui/material";
 import SendIcon from "@mui/icons-material/Send";
 import { useNavigate } from "react-router-dom";
+import { addFavorite } from "../favorite/favoriteSlice";
 
-export const SearchBar = () => {
-  const [input, setInput] = useState<string>("");
+const SearchBar = () => {
+  const [query, setQuery] = useState(""); // одно состояние для ввода
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
 
   const handleSearch = () => {
-    if (input) {
-      dispatch(searchVideos(input));
-      setInput("");
+    const trimmedQuery = query.trim();
+    if (trimmedQuery) {
+      // 1. Выполняем поиск
+      dispatch(searchVideos(trimmedQuery));
+      // 2. Сохраняем в избранное
+      dispatch(addFavorite(trimmedQuery));
+      // 3. Очищаем поле
+      setQuery("");
+      // 4. Переходим на страницу со списком видео
       navigate("/videolist");
     }
   };
@@ -24,11 +31,13 @@ export const SearchBar = () => {
       <TextField
         placeholder="Введите свой запрос для поиска"
         className="search-el-input"
-        // id="outlined-basic"
-        // label="Outlined"
-        // variant="outlined"
-        value={input}
-        onChange={(event) => setInput(event.target.value)}
+        value={query}
+        onChange={(e) => setQuery(e.target.value)}
+        onKeyDown={(e) => {
+          if (e.key === "Enter") {
+            handleSearch();
+          }
+        }}
       />
       <Button
         className="search-el-button"
@@ -41,3 +50,5 @@ export const SearchBar = () => {
     </div>
   );
 };
+
+export { SearchBar };

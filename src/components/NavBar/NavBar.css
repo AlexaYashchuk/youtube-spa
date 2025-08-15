@@ -13,3 +13,20 @@
   align-items: center;
   gap: 10px;
 }
+
+.menu {
+  display: flex;
+  gap: 15px;
+}
+
+.menuBtn {
+  color: rgb(255, 255, 255);
+  text-decoration: none;
+  padding: 6px 12px;
+  border-radius: 4px;
+  transition: background 0.3s ease;
+}
+
+.menuBtn:hover {
+  background: rgba(20, 14, 216, 0.2);
+}
