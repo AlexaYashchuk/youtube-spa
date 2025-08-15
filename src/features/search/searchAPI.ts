@@ -16,7 +16,7 @@ export async function fetchVideosByKeyword(
     {
       params: {
         part: "snippet",
-        maxResults: 10,
+        maxResults: 12,
         q: query,
         key: API_KEY,
         type: "video",
