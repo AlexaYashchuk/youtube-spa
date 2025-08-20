@@ -9,14 +9,15 @@ const API_KEY = import.meta.env.VITE_YOUTUBE_API_KEY;
 console.log("API KEY:", import.meta.env.VITE_YOUTUBE_API_KEY);
 
 export async function fetchVideosByKeyword(
-  query: string
+  query: string,
+  maxResults = 12
 ): Promise<VideoItem[]> {
   const response = await axios.get(
     "https://www.googleapis.com/youtube/v3/search",
     {
       params: {
         part: "snippet",
-        maxResults: 12,
+        maxResults,
         q: query,
         key: API_KEY,
         type: "video",

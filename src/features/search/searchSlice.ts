@@ -20,8 +20,8 @@ const initialState: SearchState = {
 
 export const searchVideos = createAsyncThunk(
   "search/fetchVideos",
-  async (query: string) => {
-    const response = await fetchVideosByKeyword(query);
+  async ({ query, maxResults }: { query: string; maxResults: number }) => {
+    const response = await fetchVideosByKeyword(query, maxResults);
     return { videos: response, query };
   }
 );
