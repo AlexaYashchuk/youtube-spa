@@ -8,22 +8,17 @@ import { useNavigate } from "react-router-dom";
 import { addFavorite } from "../favorite/favoriteSlice";
 
 const SearchBar = () => {
-  const [query, setQuery] = useState(""); // одно состояние для ввода
+  const [query, setQuery] = useState("");
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
 
   const handleSearch = () => {
-    const trimmedQuery = query.trim();
-    if (trimmedQuery) {
-      // 1. Выполняем поиск
-      dispatch(searchVideos(trimmedQuery));
-      // 2. Сохраняем в избранное
-      dispatch(addFavorite(trimmedQuery));
-      // 3. Очищаем поле
-      setQuery("");
-      // 4. Переходим на страницу со списком видео
-      navigate("/videolist");
-    }
+    const q = query.trim();
+    if (!q) return;
+    dispatch(searchVideos({ query: q, maxResults: 12 }));
+    dispatch(addFavorite(q));
+    setQuery("");
+    navigate("/videolist"); // если нужна другая страница — поменяй
   };
 
   return (
@@ -33,11 +28,7 @@ const SearchBar = () => {
         className="search-el-input"
         value={query}
         onChange={(e) => setQuery(e.target.value)}
-        onKeyDown={(e) => {
-          if (e.key === "Enter") {
-            handleSearch();
-          }
-        }}
+        onKeyDown={(e) => e.key === "Enter" && handleSearch()}
       />
       <Button
         className="search-el-button"

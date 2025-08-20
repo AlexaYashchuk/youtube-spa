@@ -1,54 +1,71 @@
 import { createSlice, type PayloadAction } from "@reduxjs/toolkit";
 
-interface FavoriteState {
-  queries: string[];
+export interface FavoriteState {
+  items: string[];
 }
 
-// Функция для загрузки из localStorage
-const loadFromLocalStorage = (): string[] => {
+const loadFromLS = (): string[] => {
   try {
-    const saved = localStorage.getItem("favorites");
-    return saved ? JSON.parse(saved) : [];
+    const raw = localStorage.getItem("favorites");
+    return raw ? JSON.parse(raw) : [];
   } catch {
     return [];
   }
 };
 
-// Функция для сохранения в localStorage
-const saveToLocalStorage = (queries: string[]) => {
+const saveToLS = (items: string[]) => {
   try {
-    localStorage.setItem("favorites", JSON.stringify(queries));
-  } catch {
-    // Игнорируем ошибки
-  }
+    localStorage.setItem("favorites", JSON.stringify(items));
+  } catch {}
 };
 
 const initialState: FavoriteState = {
-  queries: loadFromLocalStorage(),
+  items: loadFromLS(),
 };
 
-const favoritesSlice = createSlice({
-  name: "favorites",
+const favoriteSlice = createSlice({
+  name: "favorite",
   initialState,
   reducers: {
     addFavorite: (state, action: PayloadAction<string>) => {
-      if (!state.queries.includes(action.payload)) {
-        state.queries.push(action.payload);
-        saveToLocalStorage(state.queries);
+      const q = action.payload.trim();
+      if (!q) return;
+      if (!state.items.includes(q)) {
+        state.items.push(q);
+        saveToLS(state.items);
       }
     },
     removeFavorite: (state, action: PayloadAction<string>) => {
-      state.queries = state.queries.filter((q) => q !== action.payload);
-      saveToLocalStorage(state.queries);
+      state.items = state.items.filter((x) => x !== action.payload);
+      saveToLS(state.items);
+    },
+    editFavorite: (
+      state,
+      action: PayloadAction<{ oldQuery: string; newQuery: string }>
+    ) => {
+      const { oldQuery, newQuery } = action.payload;
+      const idx = state.items.findIndex((x) => x === oldQuery);
+      if (idx !== -1) {
+        const val = newQuery.trim();
+        if (!val) return;
+        // не дублируем
+        if (!state.items.includes(val)) {
+          state.items[idx] = val;
+        } else {
+          // если уже есть новый — просто удалим старый
+          state.items.splice(idx, 1);
+        }
+        saveToLS(state.items);
+      }
     },
     clearFavorites: (state) => {
-      state.queries = [];
-      saveToLocalStorage(state.queries);
+      state.items = [];
+      saveToLS(state.items);
     },
   },
 });
 
-export const { addFavorite, removeFavorite, clearFavorites } =
-  favoritesSlice.actions;
+export const { addFavorite, removeFavorite, editFavorite, clearFavorites } =
+  favoriteSlice.actions;
 
-export default favoritesSlice.reducer;
+export default favoriteSlice.reducer;
