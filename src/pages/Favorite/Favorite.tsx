@@ -1,8 +1,9 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useAppDispatch, useAppSelector } from "../../app/hooks";
 import {
   removeFavorite,
   editFavorite,
+  loadFavoritesForUser,
 } from "../../features/favorite/favoriteSlice";
 import { searchVideos } from "../../features/search/searchSlice";
 import { List, Button, Modal, Input, Slider, Empty, Typography } from "antd";
@@ -12,17 +13,50 @@ import {
   PlayCircleOutlined,
 } from "@ant-design/icons";
 import { NavBar } from "../../components/NavBar/NavBar";
+import type { RootState } from "../../app/store";
 
 const { Title } = Typography;
 
 export const Favorite = () => {
   const dispatch = useAppDispatch();
-  const favorites = useAppSelector((s) => s.favorite.items);
 
+  // текущий пользователь
+  const user = useAppSelector((state: RootState) => state.login.user);
+  const userId = user?.email;
+
+  // загружаем избранное пользователя при монтировании
+  useEffect(() => {
+    if (userId) {
+      dispatch(loadFavoritesForUser({ userId }));
+    }
+  }, [dispatch, userId]);
+
+  // избранное конкретного пользователя
+
+  // const favorites = useAppSelector((state: RootState) =>
+  //   userId ? state.favorite.favoritesByUser[userId] || [] : []
+  // );
+
+  // 1. Берём весь объект favoritesByUser
+  const favoritesByUser = useAppSelector(
+    (state: RootState) => state.favorite.favoritesByUser
+  );
+
+  // 2. Получаем массив избранного только для текущего пользователя
+  const favorites = userId ? favoritesByUser[userId] ?? [] : [];
+
+  // модальное окно
   const [isOpen, setIsOpen] = useState(false);
   const [selectedQuery, setSelectedQuery] = useState("");
   const [editedQuery, setEditedQuery] = useState("");
   const [count, setCount] = useState(12);
+
+  // при заходе на страницу грузим избранное пользователя
+  useEffect(() => {
+    if (userId) {
+      dispatch(loadFavoritesForUser({ userId }));
+    }
+  }, [dispatch, userId]);
 
   const openModal = (q: string) => {
     setSelectedQuery(q);
@@ -30,15 +64,26 @@ export const Favorite = () => {
     setCount(12);
     setIsOpen(true);
   };
+
   const closeModal = () => setIsOpen(false);
 
   const onDelete = () => {
-    dispatch(removeFavorite(selectedQuery));
+    if (userId) {
+      dispatch(removeFavorite({ userId, query: selectedQuery }));
+    }
     closeModal();
   };
 
   const onEdit = () => {
-    dispatch(editFavorite({ oldQuery: selectedQuery, newQuery: editedQuery }));
+    if (userId) {
+      dispatch(
+        editFavorite({
+          userId,
+          oldQuery: selectedQuery,
+          newQuery: editedQuery,
+        })
+      );
+    }
     closeModal();
   };
 
@@ -46,6 +91,20 @@ export const Favorite = () => {
     dispatch(searchVideos({ query: editedQuery, maxResults: count }));
     closeModal();
   };
+
+  if (!userId) {
+    return (
+      <>
+        <NavBar />
+        <div style={{ padding: 24 }}>
+          <Title level={2} style={{ marginBottom: 16 }}>
+            Избранные запросы
+          </Title>
+          <Empty description="⚠ Войдите в аккаунт, чтобы видеть избранное" />
+        </div>
+      </>
+    );
+  }
 
   return (
     <>
