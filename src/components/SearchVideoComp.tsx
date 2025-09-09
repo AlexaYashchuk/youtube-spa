@@ -4,7 +4,10 @@ import { useAppSelector, useAppDispatch } from "../app/hooks";
 import { searchVideos, clearHistory } from "../features/search/searchSlice";
 
 const SearchVideoComp = () => {
-  const history = useAppSelector((state) => state.search.history);
+  const userId = useAppSelector((state) => state.login.user?.email);
+  const history = useAppSelector((state) =>
+    userId ? state.search.historyByUser[userId] || [] : []
+  );
   const dispatch = useAppDispatch();
 
   return (

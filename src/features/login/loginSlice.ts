@@ -12,6 +12,7 @@ interface LoginResponse {
 }
 
 interface LoginState {
+  user: any;
   isLoading: boolean;
   error: string | null;
 }
@@ -42,6 +43,7 @@ export const loginUser = createAsyncThunk<
 const initialState: LoginState = {
   isLoading: false,
   error: null,
+  user: undefined,
 };
 
 const loginSlice = createSlice({
