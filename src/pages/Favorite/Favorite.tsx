@@ -22,41 +22,25 @@ export const Favorite = () => {
 
   // текущий пользователь
   const user = useAppSelector((state: RootState) => state.login.user);
-  const userId = user?.email;
+  const userId = user?.email ?? null;
 
-  // загружаем избранное пользователя при монтировании
+  // при заходе на страницу и при изменении userId — подгружаем избранное
   useEffect(() => {
     if (userId) {
       dispatch(loadFavoritesForUser({ userId }));
     }
   }, [dispatch, userId]);
 
-  // избранное конкретного пользователя
-
-  // const favorites = useAppSelector((state: RootState) =>
-  //   userId ? state.favorite.favoritesByUser[userId] || [] : []
-  // );
-
-  // 1. Берём весь объект favoritesByUser
-  const favoritesByUser = useAppSelector(
-    (state: RootState) => state.favorite.favoritesByUser
+  // избранное пользователя
+  const favorites = useAppSelector((state: RootState) =>
+    userId ? state.favorite.favoritesByUser[userId] ?? [] : []
   );
-
-  // 2. Получаем массив избранного только для текущего пользователя
-  const favorites = userId ? favoritesByUser[userId] ?? [] : [];
 
   // модальное окно
   const [isOpen, setIsOpen] = useState(false);
   const [selectedQuery, setSelectedQuery] = useState("");
   const [editedQuery, setEditedQuery] = useState("");
   const [count, setCount] = useState(12);
-
-  // при заходе на страницу грузим избранное пользователя
-  useEffect(() => {
-    if (userId) {
-      dispatch(loadFavoritesForUser({ userId }));
-    }
-  }, [dispatch, userId]);
 
   const openModal = (q: string) => {
     setSelectedQuery(q);
@@ -92,6 +76,7 @@ export const Favorite = () => {
     closeModal();
   };
 
+  // если пользователь не авторизован
   if (!userId) {
     return (
       <>
