@@ -14,11 +14,13 @@ import {
 } from "@ant-design/icons";
 import { NavBar } from "../../components/NavBar/NavBar";
 import type { RootState } from "../../app/store";
+import { useNavigate } from "react-router-dom";
 
 const { Title } = Typography;
 
 export const Favorite = () => {
   const dispatch = useAppDispatch();
+  const navigate = useNavigate();
 
   // текущий пользователь
   const user = useAppSelector((state: RootState) => state.login.user);
@@ -71,9 +73,15 @@ export const Favorite = () => {
     closeModal();
   };
 
+  // const onExecute = () => {
+  //   dispatch(searchVideos({ query: editedQuery, maxResults: count }));
+  //   closeModal();
+  // };
+
   const onExecute = () => {
     dispatch(searchVideos({ query: editedQuery, maxResults: count }));
     closeModal();
+    navigate("/videolist"); // переход на страницу со списком видео
   };
 
   // если пользователь не авторизован

@@ -29,24 +29,56 @@ const favoriteSlice = createSlice({
   name: "favorite",
   initialState,
   reducers: {
+    // addFavorite: (
+    //   state,
+    //   action: PayloadAction<{ userId: string; query?: string }>
+    // ) => {
+    //   const { userId, query } = action.payload;
+
+    //   if (!query) return; // если query пустой или undefined, выходим
+
+    //   const q = query.trim();
+    //   if (!q) return;
+
+    //   if (!state.favoritesByUser[userId]) {
+    //     state.favoritesByUser[userId] = loadFromLS(userId);
+    //   }
+
+    //   if (!state.favoritesByUser[userId].includes(q)) {
+    //     state.favoritesByUser[userId].push(q);
+    //     saveToLS(userId, state.favoritesByUser[userId]);
+    //   }
+    // },
     addFavorite: (
       state,
       action: PayloadAction<{ userId: string; query?: string }>
     ) => {
       const { userId, query } = action.payload;
 
-      if (!query) return; // если query пустой или undefined, выходим
+      console.log("[addFavorite] payload:", action.payload);
+
+      if (!query) {
+        console.log("[addFavorite] ❌ query пустой");
+        return;
+      }
 
       const q = query.trim();
-      if (!q) return;
+      if (!q) {
+        console.log("[addFavorite] ❌ после trim пустая строка");
+        return;
+      }
 
       if (!state.favoritesByUser[userId]) {
+        console.log("[addFavorite] загружаем избранное из LS для", userId);
         state.favoritesByUser[userId] = loadFromLS(userId);
       }
 
       if (!state.favoritesByUser[userId].includes(q)) {
+        console.log("[addFavorite] ✅ добавляем:", q);
         state.favoritesByUser[userId].push(q);
         saveToLS(userId, state.favoritesByUser[userId]);
+      } else {
+        console.log("[addFavorite] ⚠ уже есть:", q);
       }
     },
 

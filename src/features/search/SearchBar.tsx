@@ -13,20 +13,23 @@ const SearchBar = () => {
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
 
-  // достаём текущего пользователя
+  // текущий пользователь
   const user = useAppSelector((state: RootState) => state.login.user);
-  const userId = user?.email ?? null;
+  const userId = user?.email;
 
   const handleSearch = () => {
     const q = query.trim();
     if (!q) return;
 
-    // выполняем поиск
+    // поиск
     dispatch(searchVideos({ query: q, maxResults: 12 }));
 
-    // сохраняем в избранное только если пользователь авторизован
+    // добавление в избранное
     if (userId) {
       dispatch(addFavorite({ userId, query: q }));
+      console.log("[SearchBar] добавлен запрос в избранное:", { userId, q });
+    } else {
+      console.log("[SearchBar] ❌ нет userId, избранное не сохранено");
     }
 
     setQuery("");

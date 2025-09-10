@@ -1,6 +1,6 @@
 # Youtube SPA (React + Redux Toolkit + TypeScript)
 
-Функциональный ToDo список, разработанный с использованием **React**, **Redux Toolkit**, **JavaScript** и **localStorage**.
+Разработано с использованием **React**, **Redux Toolkit**, **TypeScript** и **localStorage**.
 
 ##
 
