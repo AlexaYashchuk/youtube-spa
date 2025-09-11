@@ -8,7 +8,7 @@
 
 1. alexandra.199@mail.ru / 1234Qwe!
 2. Kirill@mail.ru / 1234Qwe!
-   VITE_YOUTUBE_API_KEY=AIzaSyDL4jN5szgL4Kip4rxCOlx-2xQFLRq01IM
+3. VITE_YOUTUBE_API_KEY=AIzaSyDL4jN5szgL4Kip4rxCOlx-2xQFLRq01IM
 
 ##
 
