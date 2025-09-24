@@ -2,39 +2,37 @@ import { useAppSelector } from "../../app/hooks";
 import { SearchVideo } from "../SearchVideo/SearchVideo";
 import { ListView } from "../../components/VideoList/ListView";
 import { CardView } from "../../components/VideoList/CardView";
-import { Button, Segmented } from "antd";
+import { Segmented } from "antd";
 import { useState } from "react";
+import "./VideoPage.css";
 
 const VideoPage = () => {
   const videos = useAppSelector((state) => state.search.videos);
   const [viewMode, setViewMode] = useState<"list" | "card">("list");
 
-  const videosToShow = videos.slice(0, 12); // по умолчанию 12 видео
-
   return (
-    <>
-      <SearchVideo />
-      <hr />
-      <div style={{ padding: "20px" }}>
+    <div>
+      <div>
+        <SearchVideo />
         <Segmented
+          className="video-segment"
           options={[
             { label: "Список", value: "list" },
             { label: "Карточки", value: "card" },
           ]}
           value={viewMode}
           onChange={(val) => setViewMode(val as "list" | "card")}
-          style={{ marginBottom: 20 }}
         />
+      </div>
 
-        <hr />
-
+      <div className="video-content">
         {viewMode === "list" ? (
-          <ListView videos={videosToShow} />
+          <ListView videos={videos} />
         ) : (
-          <CardView videos={videosToShow} />
+          <CardView videos={videos} />
         )}
       </div>
-    </>
+    </div>
   );
 };
 

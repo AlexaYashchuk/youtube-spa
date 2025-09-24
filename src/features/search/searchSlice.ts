@@ -3,14 +3,14 @@ import {
   createAsyncThunk,
   type PayloadAction,
 } from "@reduxjs/toolkit";
-import { fetchVideosByKeyword } from "./searchAPI";
 import type { VideoItem } from "../../types/video";
+import axios from "axios";
 
 interface SearchState {
   history: any;
   query: string;
   videos: VideoItem[];
-  historyByUser: Record<string, string[]>; // ключ - userId (например email)
+  historyByUser: Record<string, string[]>;
   loading: boolean;
   error: string | null;
 }
@@ -24,11 +24,25 @@ const initialState: SearchState = {
   history: undefined,
 };
 
+const API_KEY = import.meta.env.VITE_YOUTUBE_API_KEY;
+
 export const searchVideos = createAsyncThunk(
   "search/fetchVideos",
   async ({ query, maxResults }: { query: string; maxResults: number }) => {
-    const response = await fetchVideosByKeyword(query, maxResults);
-    return { videos: response, query };
+    const response = await axios.get(
+      "https://www.googleapis.com/youtube/v3/search",
+      {
+        params: {
+          part: "snippet",
+          maxResults,
+          q: query,
+          key: API_KEY,
+          type: "video",
+        },
+      }
+    );
+
+    return { videos: response.data.items as VideoItem[], query };
   }
 );
 
@@ -36,12 +50,9 @@ const searchSlice = createSlice({
   name: "search",
   initialState,
   reducers: {
-    // очистка истории конкретного пользователя
     clearHistory: (state, action: PayloadAction<{ userId: string }>) => {
       state.historyByUser[action.payload.userId] = [];
     },
-
-    // добавляем поисковый запрос в историю конкретного пользователя
     addToHistory: (
       state,
       action: PayloadAction<{ userId: string; query: string }>
@@ -52,13 +63,10 @@ const searchSlice = createSlice({
         state.historyByUser[userId] = [];
       }
 
-      // исключаем дубликаты и добавляем новый запрос в начало
       state.historyByUser[userId] = [
         query,
         ...state.historyByUser[userId].filter((q) => q !== query),
       ];
-
-      // ограничим историю, например, до 10 записей
       if (state.historyByUser[userId].length > 10) {
         state.historyByUser[userId] = state.historyByUser[userId].slice(0, 10);
       }
@@ -74,7 +82,6 @@ const searchSlice = createSlice({
         state.loading = false;
         state.videos = action.payload.videos;
         state.query = action.payload.query;
-        // ⚠️ здесь историю НЕ добавляем, потому что теперь делаем это через addToHistory
       })
       .addCase(searchVideos.rejected, (state, action) => {
         state.loading = false;

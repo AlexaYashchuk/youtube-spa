@@ -19,7 +19,6 @@ const NavBar = () => {
       <div className="nav-panel-el">
         <img src="/video_player.svg" alt="logo" width="30" />
         <div className="menuBtn">
-          {" "}
           {user?.email && <span>{user.email}</span>}
         </div>
       </div>
@@ -31,12 +30,7 @@ const NavBar = () => {
           Избранное
         </Link>
       </div>
-      <Button
-        type="primary"
-        // danger
-        icon={<LogoutOutlined />}
-        onClick={handleLogout}
-      >
+      <Button type="primary" icon={<LogoutOutlined />} onClick={handleLogout}>
         Выйти
       </Button>
     </div>

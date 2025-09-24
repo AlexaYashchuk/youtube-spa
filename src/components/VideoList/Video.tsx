@@ -1,5 +1,8 @@
 import { Card } from "antd";
 import type { VideoItem } from "../../types/video";
+import "./Video.css";
+
+const { Meta } = Card;
 
 const Video = ({
   video,
@@ -12,27 +15,32 @@ const Video = ({
   const thumbnailUrl = thumbnails?.medium?.url || "";
 
   return layout === "list" ? (
-    <div style={{ display: "flex", marginBottom: 16 }}>
-      <img
-        src={thumbnailUrl}
-        alt="thumb"
-        style={{ width: 160, marginRight: 16 }}
-      />
-      <div>
-        <h3>{title}</h3>
-        <p>{description}</p>
-        <a
-          href={`https://www.youtube.com/watch?v=${video.id.videoId}`}
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Смотреть на YouTube
-        </a>
+    <Card hoverable className="video-card list">
+      <div className="video-list-content">
+        <img className="video-thumbnail" src={thumbnailUrl} alt="thumb" />
+        <Meta
+          title={title}
+          description={
+            <div>
+              <p>{description}</p>
+              <a
+                href={`https://www.youtube.com/watch?v=${video.id.videoId}`}
+                target="_blank"
+              >
+                Смотреть на YouTube
+              </a>
+            </div>
+          }
+        />
       </div>
-    </div>
+    </Card>
   ) : (
-    <Card hoverable cover={<img alt="thumbnail" src={thumbnailUrl} />}>
-      <Card.Meta
+    <Card
+      hoverable
+      className="video-card"
+      cover={<img alt="thumbnail" src={thumbnailUrl} />}
+    >
+      <Meta
         title={title}
         description={
           <>
@@ -40,7 +48,6 @@ const Video = ({
             <a
               href={`https://www.youtube.com/watch?v=${video.id.videoId}`}
               target="_blank"
-              rel="noopener noreferrer"
             >
               Смотреть на YouTube
             </a>

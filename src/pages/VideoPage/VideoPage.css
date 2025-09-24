@@ -1,0 +1,21 @@
+.video-segment {
+  background: #fff;
+  padding: 6px 12px;
+  border-radius: 10px;
+  box-shadow: 0 2px 8px #fff;
+  transition: all 0.2s ease;
+}
+
+.video-segment:hover {
+  box-shadow: 0 3px 10px #4a85bbff;
+}
+
+.video-segment {
+  background: #4a85bbff;
+  color: #fff;
+  font-weight: 500;
+}
+
+.video-content {
+  margin-top: 20px;
+}

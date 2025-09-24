@@ -15,6 +15,7 @@ import {
 import { NavBar } from "../../components/NavBar/NavBar";
 import type { RootState } from "../../app/store";
 import { useNavigate } from "react-router-dom";
+import "./Favorite.css";
 
 const { Title } = Typography;
 
@@ -22,23 +23,19 @@ export const Favorite = () => {
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
 
-  // текущий пользователь
   const user = useAppSelector((state: RootState) => state.login.user);
   const userId = user?.email ?? null;
 
-  // при заходе на страницу и при изменении userId — подгружаем избранное
   useEffect(() => {
     if (userId) {
       dispatch(loadFavoritesForUser({ userId }));
     }
   }, [dispatch, userId]);
 
-  // избранное пользователя
   const favorites = useAppSelector((state: RootState) =>
     userId ? state.favorite.favoritesByUser[userId] ?? [] : []
   );
 
-  // модальное окно
   const [isOpen, setIsOpen] = useState(false);
   const [selectedQuery, setSelectedQuery] = useState("");
   const [editedQuery, setEditedQuery] = useState("");
@@ -73,24 +70,18 @@ export const Favorite = () => {
     closeModal();
   };
 
-  // const onExecute = () => {
-  //   dispatch(searchVideos({ query: editedQuery, maxResults: count }));
-  //   closeModal();
-  // };
-
   const onExecute = () => {
     dispatch(searchVideos({ query: editedQuery, maxResults: count }));
     closeModal();
-    navigate("/videolist"); // переход на страницу со списком видео
+    navigate("/videolist");
   };
 
-  // если пользователь не авторизован
   if (!userId) {
     return (
       <>
         <NavBar />
-        <div style={{ padding: 24 }}>
-          <Title level={2} style={{ marginBottom: 16 }}>
+        <div className="favorite-container">
+          <Title level={2} className="favorite-title">
             Избранные запросы
           </Title>
           <Empty description="⚠ Войдите в аккаунт, чтобы видеть избранное" />
@@ -102,8 +93,8 @@ export const Favorite = () => {
   return (
     <>
       <NavBar />
-      <div style={{ padding: 24 }}>
-        <Title level={2} style={{ marginBottom: 16 }}>
+      <div className="favorite-container">
+        <Title level={2} className="favorite-title">
           Избранные запросы
         </Title>
 
@@ -113,18 +104,12 @@ export const Favorite = () => {
           <List
             bordered
             dataSource={favorites}
-            style={{ background: "#fff", borderRadius: 12, overflow: "hidden" }}
+            className="favorite-list"
             renderItem={(item) => (
-              <List.Item style={{ padding: "12px 16px" }}>
+              <List.Item className="favorite-list-item">
                 <Button
                   type="text"
-                  style={{
-                    width: "100%",
-                    textAlign: "left",
-                    padding: 0,
-                    height: "auto",
-                    fontSize: 16,
-                  }}
+                  className="favorite-button"
                   onClick={() => openModal(item)}
                 >
                   {item}
@@ -134,15 +119,8 @@ export const Favorite = () => {
           />
         )}
 
-        <Modal
-          title="Запрос"
-          open={isOpen}
-          onCancel={closeModal}
-          footer={null}
-          destroyOnClose
-        >
-          {/* 1) редактируемый запрос */}
-          <div style={{ marginBottom: 16 }}>
+        <Modal title="Запрос" open={isOpen} onCancel={closeModal} footer={null}>
+          <div className="modal-section">
             <Input
               value={editedQuery}
               onChange={(e) => setEditedQuery(e.target.value)}
@@ -150,23 +128,17 @@ export const Favorite = () => {
             />
           </div>
 
-          {/* 2) ползунок 0..50 */}
-          <div style={{ marginBottom: 16 }}>
+          <div className="modal-section">
             <Slider
               min={0}
               max={50}
               value={count}
               onChange={(v) => setCount(v as number)}
             />
-            <div style={{ textAlign: "right", fontSize: 12 }}>
-              Количество видео: {count}
-            </div>
+            <div className="modal-slider-info">Количество видео: {count}</div>
           </div>
 
-          {/* 3) кнопки */}
-          <div
-            style={{ display: "flex", gap: 8, justifyContent: "space-between" }}
-          >
+          <div className="modal-actions">
             <Button danger icon={<DeleteOutlined />} onClick={onDelete}>
               УДАЛИТЬ
             </Button>

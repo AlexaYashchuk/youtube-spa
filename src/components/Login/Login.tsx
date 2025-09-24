@@ -3,9 +3,9 @@ import { Input, Button } from "antd";
 import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { useNavigate } from "react-router-dom";
-import { loginUser } from "../features/login/loginSlice";
-import { useAppDispatch, useAppSelector } from "../app/hooks";
-import "../pages/Home/Home.css";
+import { loginUser } from "../../features/login/loginSlice";
+import { useAppDispatch, useAppSelector } from "../../app/hooks";
+import "../../pages/Home/Home.css";
 
 interface LoginFormInputs {
   email: string;

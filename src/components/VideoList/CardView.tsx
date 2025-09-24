@@ -1,12 +1,14 @@
 import { Video } from "./Video";
 import "./CardView.css";
 
-export const CardView = ({ videos }: { videos: any[] }) => {
+const CardView = ({ videos }: { videos: any[] }) => {
   return (
     <div className="card-grid">
       {videos.map((video) => (
-        <Video key={video.id} video={video} layout="card" />
+        <Video key={video.id.videoId} video={video} layout="card" />
       ))}
     </div>
   );
 };
+
+export { CardView };

@@ -1,24 +1,27 @@
 import { createSlice, type PayloadAction } from "@reduxjs/toolkit";
 
 export interface FavoriteState {
-  favoritesByUser: Record<string, string[]>; // ключ - userId, значение - список избранного
+  favoritesByUser: Record<string, string[]>;
 }
 
-// загрузка избранного конкретного пользователя
 const loadFromLS = (userId: string): string[] => {
-  try {
-    const raw = localStorage.getItem(`favorites_${userId}`);
-    return raw ? JSON.parse(raw) : [];
-  } catch {
-    return [];
-  }
+  const raw = localStorage.getItem(`favorites_${userId}`);
+  return raw ? JSON.parse(raw) : [];
 };
 
-// сохранение избранного конкретного пользователя
 const saveToLS = (userId: string, items: string[]) => {
-  try {
-    localStorage.setItem(`favorites_${userId}`, JSON.stringify(items));
-  } catch {}
+  localStorage.setItem(`favorites_${userId}`, JSON.stringify(items));
+};
+
+const normalizeQuery = (query: string): string | null => {
+  const trimmed = query.trim();
+  return trimmed.length > 0 ? trimmed : null;
+};
+
+const ensureUserFavorites = (state: FavoriteState, userId: string) => {
+  if (!state.favoritesByUser[userId]) {
+    state.favoritesByUser[userId] = loadFromLS(userId);
+  }
 };
 
 const initialState: FavoriteState = {
@@ -29,56 +32,21 @@ const favoriteSlice = createSlice({
   name: "favorite",
   initialState,
   reducers: {
-    // addFavorite: (
-    //   state,
-    //   action: PayloadAction<{ userId: string; query?: string }>
-    // ) => {
-    //   const { userId, query } = action.payload;
-
-    //   if (!query) return; // если query пустой или undefined, выходим
-
-    //   const q = query.trim();
-    //   if (!q) return;
-
-    //   if (!state.favoritesByUser[userId]) {
-    //     state.favoritesByUser[userId] = loadFromLS(userId);
-    //   }
-
-    //   if (!state.favoritesByUser[userId].includes(q)) {
-    //     state.favoritesByUser[userId].push(q);
-    //     saveToLS(userId, state.favoritesByUser[userId]);
-    //   }
-    // },
     addFavorite: (
       state,
-      action: PayloadAction<{ userId: string; query?: string }>
+      action: PayloadAction<{ userId: string; query: string }>
     ) => {
       const { userId, query } = action.payload;
 
-      console.log("[addFavorite] payload:", action.payload);
+      const normalized = normalizeQuery(query);
+      if (!normalized) return;
 
-      if (!query) {
-        console.log("[addFavorite] ❌ query пустой");
-        return;
-      }
+      ensureUserFavorites(state, userId);
 
-      const q = query.trim();
-      if (!q) {
-        console.log("[addFavorite] ❌ после trim пустая строка");
-        return;
-      }
-
-      if (!state.favoritesByUser[userId]) {
-        console.log("[addFavorite] загружаем избранное из LS для", userId);
-        state.favoritesByUser[userId] = loadFromLS(userId);
-      }
-
-      if (!state.favoritesByUser[userId].includes(q)) {
-        console.log("[addFavorite] ✅ добавляем:", q);
-        state.favoritesByUser[userId].push(q);
-        saveToLS(userId, state.favoritesByUser[userId]);
-      } else {
-        console.log("[addFavorite] ⚠ уже есть:", q);
+      const favorites = state.favoritesByUser[userId];
+      if (!favorites.includes(normalized)) {
+        favorites.push(normalized);
+        saveToLS(userId, favorites);
       }
     },
 
@@ -88,14 +56,14 @@ const favoriteSlice = createSlice({
     ) => {
       const { userId, query } = action.payload;
 
-      if (!state.favoritesByUser[userId]) {
-        state.favoritesByUser[userId] = loadFromLS(userId);
-      }
+      ensureUserFavorites(state, userId);
 
-      state.favoritesByUser[userId] = state.favoritesByUser[userId].filter(
+      const favorites = state.favoritesByUser[userId].filter(
         (x) => x !== query
       );
-      saveToLS(userId, state.favoritesByUser[userId]);
+      state.favoritesByUser[userId] = favorites;
+
+      saveToLS(userId, favorites);
     },
 
     editFavorite: (
@@ -103,45 +71,45 @@ const favoriteSlice = createSlice({
       action: PayloadAction<{
         userId: string;
         oldQuery: string;
-        newQuery?: string;
+        newQuery: string;
       }>
     ) => {
       const { userId, oldQuery, newQuery } = action.payload;
 
-      if (!newQuery) return;
-      const val = newQuery.trim();
-      if (!val) return;
+      const normalized = normalizeQuery(newQuery);
+      if (!normalized) return;
 
-      if (!state.favoritesByUser[userId]) {
-        state.favoritesByUser[userId] = loadFromLS(userId);
-      }
+      ensureUserFavorites(state, userId);
 
-      const idx = state.favoritesByUser[userId].findIndex(
-        (x) => x === oldQuery
-      );
+      const favorites = state.favoritesByUser[userId];
+      const idx = favorites.findIndex((x) => x === oldQuery);
+
       if (idx !== -1) {
-        if (!state.favoritesByUser[userId].includes(val)) {
-          state.favoritesByUser[userId][idx] = val;
-        } else {
-          state.favoritesByUser[userId].splice(idx, 1);
+        if (oldQuery === normalized) {
+          return;
         }
-        saveToLS(userId, state.favoritesByUser[userId]);
+
+        if (!favorites.includes(normalized)) {
+          favorites[idx] = normalized;
+        } else {
+          favorites.splice(idx, 1);
+        }
+        saveToLS(userId, favorites);
       }
     },
 
     clearFavorites: (state, action: PayloadAction<{ userId: string }>) => {
-      state.favoritesByUser[action.payload.userId] = [];
-      saveToLS(action.payload.userId, []);
+      const { userId } = action.payload;
+      state.favoritesByUser[userId] = [];
+      saveToLS(userId, []);
     },
 
-    // загрузка избранного при входе в аккаунт
     loadFavoritesForUser: (
       state,
       action: PayloadAction<{ userId: string }>
     ) => {
-      state.favoritesByUser[action.payload.userId] = loadFromLS(
-        action.payload.userId
-      );
+      const { userId } = action.payload;
+      state.favoritesByUser[userId] = loadFromLS(userId);
     },
   },
 });
