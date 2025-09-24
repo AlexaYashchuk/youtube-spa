@@ -1,12 +1,11 @@
 import { useAppSelector, useAppDispatch } from "../app/hooks";
 import { searchVideos } from "../features/search/searchSlice";
 import { useState } from "react";
-import TextField from "@mui/material/TextField";
-import { Button } from "@mui/material";
-import SendIcon from "@mui/icons-material/Send";
 import { useNavigate } from "react-router-dom";
 import { addFavorite } from "../features/favorite/favoriteSlice";
 import type { RootState } from "../app/store";
+import { Input, Button } from "antd";
+import { SearchOutlined } from "@ant-design/icons";
 
 const SearchVideoComp = () => {
   const [query, setQuery] = useState("");
@@ -39,7 +38,7 @@ const SearchVideoComp = () => {
     <div>
       <h1>🔍 Поиск видео</h1>
       <div>
-        <TextField
+        <Input
           placeholder="Введите запрос для поиска"
           className="search-el-input"
           value={query}
@@ -50,7 +49,7 @@ const SearchVideoComp = () => {
           className="search-el-button"
           onClick={handleSearch}
           variant="outlined"
-          endIcon={<SendIcon />}
+          icon={<SearchOutlined />}
         >
           Найти
         </Button>
