@@ -50,7 +50,7 @@ const Login = () => {
   return (
     <div>
       <form className="card" onSubmit={handleSubmit(loginAxios)}>
-        <img src="/video_player.svg" alt="logo" className={"logo"} />
+        <img src="./video_player.svg" alt="logo" className={"logo"} />
 
         <div className="input">
           <Controller

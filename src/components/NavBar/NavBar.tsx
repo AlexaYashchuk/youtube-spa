@@ -17,7 +17,7 @@ const NavBar = () => {
   return (
     <div className="nav-panel">
       <div className="nav-panel-el">
-        <img src="/video_player.svg" alt="logo" width="30" />
+        <img src="./video_player.svg" alt="logo" width="30" />
         <div className="menuBtn">
           {user?.email && <span>{user.email}</span>}
         </div>
